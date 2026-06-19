@@ -28,8 +28,8 @@ from rag_utils import (
 st.set_page_config(
     page_title="Company RAG Assistant",
     page_icon="🤖",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    layout="centered",  # Better for mobile
+    initial_sidebar_state="collapsed"  # Collapsed by default on mobile
 )
 
 # ============ CUSTOM CSS ============
@@ -150,11 +150,9 @@ for msg in st.session_state.messages:
                 st.markdown(f'<span class="source-badge">{source_name}</span>', unsafe_allow_html=True)
 
 # Chat input
-col1, col2 = st.columns([6, 1])
-with col1:
-    question = st.text_input("Ask your question...", key="question_input", placeholder="What would you like to know?")
-with col2:
-    submit_btn = st.button("Send", type="primary")
+# Chat input (mobile-optimized)
+        question = st.text_input("Ask your question...", key="question_input", placeholder="What would you like to know?")
+        submit_btn = st.button("🚀 Send", type="primary", use_container_width=True)
 
 # Process question
 if submit_btn and question:
@@ -166,23 +164,49 @@ if submit_btn and question:
     })
     
     # Get answer
-    with st.spinner("🔍 Searching your documents..."):
-        try:
-            result = st.session_state.qa_chain({"query": question})
-            answer = result["result"]
-            sources = [doc.metadata.get("source", "Unknown") for doc in result.get("source_documents", [])]
-            
-            # Add assistant message
+    /* General */
+    .main {
+        padding: 1rem;
+    }
+    
+    /* Mobile optimization */
+    @media (max-width: 768px) {
+        .main {
+            padding: 0.5rem;
+        }
+        .stButton button {
+            width: 100%;
+        }
+    }
+    
+    /* Chat messages */
+    .chat-message {
+        padding: 0.75rem;
+        border-radius: 10px;
+        margin-bottom: 0.75rem;
+        word-wrap: break-word;
+        max-width: 100%;
             st.session_state.messages.append({
                 "role": "assistant",
                 "content": answer,
                 "sources": sources
             })
-            
-            st.rerun()
-            
-        except Exception as e:
+        padding: 0.25rem 0.5rem;
+        border-radius: 15px;
+        font-size: 0.75rem;
+        margin: 0.25rem 0.25rem 0.25rem 0;
+        word-break: break-word;
             st.error(f"❌ Error getting answer: {e}")
+    
+    /* Input optimization */
+    .stTextInput input {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    /* Header */
+    h1, h2, h3 {
+        word-break: break-word;
+    }
 
 # ============ SIDEBAR ============
 with st.sidebar:
