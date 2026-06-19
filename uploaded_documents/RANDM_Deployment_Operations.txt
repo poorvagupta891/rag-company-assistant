@@ -1,0 +1,608 @@
+RANDM CORPORATION - DEPLOYMENT & OPERATIONS GUIDE
+================================================
+Product: FintechAI Pro v3.2
+Document Type: Infrastructure & Deployment
+Date: June 2024
+Version: 3.2.1
+
+---
+
+1. DEPLOYMENT OPTIONS
+
+1.1 Kubernetes Cluster Deployment (Recommended)
+
+Prerequisites:
+- Kubernetes 1.19+ cluster (3+ nodes)
+- kubectl configured and accessible
+- Helm 3.0+
+- 32GB RAM minimum (64GB recommended)
+- Storage class configured (for persistent volumes)
+- LoadBalancer or Ingress controller
+
+Installation Steps:
+
+Step 1: Add RANDM Helm Repository
+```bash
+helm repo add randm https://charts.randm.com
+helm repo update
+helm search repo randm/fintech-ai
+```
+
+Step 2: Create Namespace
+```bash
+kubectl create namespace fintech-prod
+kubectl label namespace fintech-prod env=production
+```
+
+Step 3: Create Values File (values.yaml)
+```yaml
+replicaCount: 3
+
+image:
+  repository: registry.randm.com/fintech-ai-pro
+  tag: "3.2.1"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets:
+  - name: randm-registry
+
+service:
+  type: LoadBalancer
+  port: 443
+  targetPort: 8443
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  hosts:
+    - host: fintech-api.company.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: fintech-tls-cert
+      hosts:
+        - fintech-api.company.com
+
+resources:
+  requests:
+    memory: "8Gi"
+    cpu: "2000m"
+  limits:
+    memory: "16Gi"
+    cpu: "4000m"
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+postgresql:
+  enabled: true
+  username: fintech_user
+  password: <secure_random_password>
+  database: fintech_db
+  primary:
+    persistence:
+      enabled: true
+      size: 100Gi
+      storageClassName: ebs-gp2
+  replicas: 2
+
+redis:
+  enabled: true
+  auth:
+    password: <secure_random_password>
+  master:
+    persistence:
+      enabled: true
+      size: 20Gi
+
+environment:
+  LOG_LEVEL: INFO
+  TLS_ENABLED: "true"
+  REGULATORY_DATA_AUTO_UPDATE: "true"
+  BACKUP_ENABLED: "true"
+  BACKUP_FREQUENCY_HOURS: 6
+```
+
+Step 4: Deploy with Helm
+```bash
+helm install fintech-pro randm/fintech-ai-pro \
+  --namespace fintech-prod \
+  --values values.yaml \
+  --wait \
+  --timeout 10m
+```
+
+Step 5: Verify Deployment
+```bash
+kubectl get pods -n fintech-prod
+kubectl get svc -n fintech-prod
+kubectl logs -f -n fintech-prod -l app=fintech-ai-pro --all-containers=true
+```
+
+Step 6: Health Check
+```bash
+kubectl exec -it -n fintech-prod <pod-name> -- \
+  curl -k https://localhost:8443/health
+```
+
+1.2 Docker Standalone Deployment
+
+Prerequisites:
+- Docker 20.10+
+- Docker Compose 1.29+
+- 32GB available disk space
+- Open ports: 8443 (HTTPS), 5432 (PostgreSQL), 6379 (Redis)
+
+docker-compose.yml:
+```yaml
+version: '3.8'
+
+services:
+  fintech-api:
+    image: registry.randm.com/fintech-ai-pro:3.2.1
+    container_name: fintech-ai-pro
+    ports:
+      - "8443:8443"
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: fintech_db
+      DATABASE_USER: fintech_user
+      DATABASE_PASSWORD: ${DB_PASSWORD}
+      REDIS_HOST: redis
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      LOG_LEVEL: INFO
+      TLS_ENABLED: "true"
+    volumes:
+      - /path/to/config:/app/config:ro
+      - /path/to/certs:/app/certs:ro
+      - fintech-data:/app/data
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - fintech-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-k", "https://localhost:8443/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  postgres:
+    image: postgres:13-alpine
+    container_name: fintech-postgres
+    environment:
+      POSTGRES_USER: fintech_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: fintech_db
+      POSTGRES_INITDB_ARGS: "-c shared_buffers=2GB -c effective_cache_size=8GB"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - fintech-network
+    restart: unless-stopped
+
+  redis:
+    image: redis:6-alpine
+    container_name: fintech-redis
+    command: redis-server --requirepass ${REDIS_PASSWORD} --maxmemory 4gb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis-data:/data
+    networks:
+      - fintech-network
+    restart: unless-stopped
+
+volumes:
+  fintech-data:
+  postgres-data:
+  redis-data:
+
+networks:
+  fintech-network:
+    driver: bridge
+```
+
+Deployment:
+```bash
+# Set environment variables
+export DB_PASSWORD=$(openssl rand -base64 24)
+export REDIS_PASSWORD=$(openssl rand -base64 24)
+
+# Start services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f fintech-api
+
+# Health check
+docker exec fintech-ai-pro curl -k https://localhost:8443/health
+
+# Stop services
+docker-compose down
+```
+
+---
+
+2. DATABASE SETUP & MIGRATION
+
+2.1 PostgreSQL Configuration
+
+Connection String:
+```
+postgresql://fintech_user:password@db.internal.randm.com:5432/fintech_db
+```
+
+Performance Tuning (for 32GB RAM system):
+```sql
+ALTER SYSTEM SET shared_buffers = '8GB';
+ALTER SYSTEM SET effective_cache_size = '24GB';
+ALTER SYSTEM SET maintenance_work_mem = '2GB';
+ALTER SYSTEM SET checkpoint_completion_target = 0.9;
+ALTER SYSTEM SET wal_buffers = '16MB';
+ALTER SYSTEM SET default_statistics_target = 100;
+ALTER SYSTEM SET random_page_cost = 1.1;
+ALTER SYSTEM SET effective_io_concurrency = 200;
+ALTER SYSTEM SET work_mem = '64MB';
+
+SELECT pg_reload_conf();
+```
+
+2.2 Database Initialization
+
+```bash
+# Connect to PostgreSQL
+psql -h db.internal.randm.com -U postgres
+
+# Create user
+CREATE USER fintech_user WITH PASSWORD 'secure_password';
+ALTER USER fintech_user CREATEDB;
+
+# Create database
+CREATE DATABASE fintech_db OWNER fintech_user;
+
+# Grant privileges
+GRANT ALL PRIVILEGES ON DATABASE fintech_db TO fintech_user;
+
+# Connect to new database
+\c fintech_db
+
+# Run migration scripts
+\i /path/to/migrations/schema_v1.sql
+\i /path/to/migrations/schema_v2.sql
+\i /path/to/migrations/schema_v3.sql
+\i /path/to/migrations/schema_v4.sql
+
+# Load initial data
+\i /path/to/data/regulatory_baseline.sql
+\i /path/to/data/industry_benchmarks.sql
+```
+
+2.3 Backup & Recovery
+
+Automated Backup Configuration:
+```bash
+# Create backup script
+cat > /usr/local/bin/backup-fintech-db.sh << 'EOF'
+#!/bin/bash
+
+BACKUP_DIR="/backups/fintech-db"
+DB_HOST="db.internal.randm.com"
+DB_USER="fintech_user"
+DB_NAME="fintech_db"
+RETENTION_DAYS=30
+
+# Create daily backup
+BACKUP_FILE="$BACKUP_DIR/fintech_db_$(date +%Y%m%d_%H%M%S).sql.gz"
+pg_dump -h $DB_HOST -U $DB_USER $DB_NAME | gzip > $BACKUP_FILE
+
+# Upload to S3
+aws s3 cp $BACKUP_FILE s3://randm-backups/fintech-db/
+
+# Clean old backups
+find $BACKUP_DIR -mtime +$RETENTION_DAYS -delete
+
+# Log backup status
+echo "Backup completed: $BACKUP_FILE" >> /var/log/fintech-backups.log
+EOF
+
+chmod +x /usr/local/bin/backup-fintech-db.sh
+
+# Schedule with cron (every 6 hours)
+crontab -e
+# Add: 0 */6 * * * /usr/local/bin/backup-fintech-db.sh
+```
+
+Recovery Procedure:
+```bash
+# List available backups
+ls -lh /backups/fintech-db/
+
+# Restore from backup
+gunzip < fintech_db_20240615_120000.sql.gz | \
+  psql -h db.internal.randm.com -U fintech_user fintech_db
+
+# Verify recovery
+psql -h db.internal.randm.com -U fintech_user fintech_db \
+  -c "SELECT COUNT(*) FROM counterparty_scores;"
+```
+
+---
+
+3. MONITORING & OBSERVABILITY
+
+3.1 Prometheus Metrics
+
+Metrics exposed on /metrics endpoint (port 8443):
+
+Key Metrics:
+```
+# Application metrics
+fintech_credit_score_calculated_total{counterparty_country="US"}
+fintech_credit_score_processing_seconds_bucket{le="0.1"}
+fintech_market_risk_calculations_total
+fintech_api_requests_total{method="POST",endpoint="/risk/credit-score"}
+fintech_api_request_duration_seconds{quantile="0.99",endpoint="/risk/credit-score"}
+
+# System metrics
+process_cpu_seconds_total
+process_resident_memory_bytes
+process_virtual_memory_bytes
+go_goroutines
+
+# Database metrics
+pg_stat_activity_idle_seconds{state="idle"}
+pg_stat_database_tup_fetched{datname="fintech_db"}
+pg_stat_database_tup_inserted{datname="fintech_db"}
+pg_connections_available
+pg_wal_size_bytes
+```
+
+3.2 Grafana Dashboard Configuration
+
+Sample dashboard query:
+```
+rate(fintech_credit_score_calculated_total[5m])
+```
+
+This shows credit scores calculated per second (5-minute rolling average).
+
+3.3 ELK Stack for Logging
+
+Elasticsearch Index Template:
+```json
+{
+  "index_patterns": ["fintech-logs-*"],
+  "settings": {
+    "number_of_shards": 3,
+    "number_of_replicas": 1,
+    "index.lifecycle.name": "fintech-policy",
+    "index.codec": "best_compression"
+  },
+  "mappings": {
+    "properties": {
+      "timestamp": {"type": "date"},
+      "level": {"type": "keyword"},
+      "logger": {"type": "keyword"},
+      "message": {"type": "text"},
+      "request_id": {"type": "keyword"},
+      "user_id": {"type": "keyword"},
+      "latency_ms": {"type": "long"},
+      "counterparty_id": {"type": "keyword"}
+    }
+  }
+}
+```
+
+---
+
+4. SECURITY HARDENING
+
+4.1 TLS Certificate Setup
+
+Generate Self-Signed Certificate (Dev Only):
+```bash
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout fintech-key.pem -out fintech-cert.pem \
+  -subj "/C=US/ST=CA/L=San Francisco/O=RANDM/CN=fintech-api.company.com"
+```
+
+Production Certificate (Let's Encrypt via Cert-Manager):
+```yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: fintech-tls-cert
+  namespace: fintech-prod
+spec:
+  secretName: fintech-tls-secret
+  duration: 2160h # 90 days
+  renewBefore: 360h # 15 days
+  commonName: fintech-api.company.com
+  dnsNames:
+    - fintech-api.company.com
+    - api.fintech-api.company.com
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+```
+
+4.2 Network Security
+
+Network Policy (Kubernetes):
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: fintech-netpol
+  namespace: fintech-prod
+spec:
+  podSelector:
+    matchLabels:
+      app: fintech-ai-pro
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              role: web
+      ports:
+        - protocol: TCP
+          port: 8443
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: postgres
+      ports:
+        - protocol: TCP
+          port: 5432
+    - to:
+        - podSelector:
+            matchLabels:
+              app: redis
+      ports:
+        - protocol: TCP
+          port: 6379
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: TCP
+          port: 53
+        - protocol: UDP
+          port: 53
+```
+
+4.3 Secrets Management
+
+Using HashiCorp Vault:
+```bash
+# Initialize Vault
+vault operator init -key-shares=5 -key-threshold=3
+vault operator unseal <key1>
+vault operator unseal <key2>
+vault operator unseal <key3>
+
+# Store secrets
+vault kv put secret/fintech-prod/database \
+  username=fintech_user \
+  password=<secure_password>
+
+# Retrieve secrets in application
+vault kv get -field=password secret/fintech-prod/database
+```
+
+---
+
+5. BACKUP & DISASTER RECOVERY
+
+5.1 Backup Strategy (3-2-1 Rule)
+
+- 3 copies of data (production + 2 backups)
+- 2 different storage types (disk + cloud)
+- 1 off-site copy (AWS S3)
+
+Backup Schedule:
+```
+Hourly: Transaction log backups (PITR: point-in-time recovery)
+Daily: Full database backup (7-day retention)
+Weekly: Full database backup (30-day retention)
+Monthly: Full database backup (365-day retention)
+```
+
+5.2 Disaster Recovery Procedures
+
+RTO (Recovery Time Objective): 15 minutes
+RPO (Recovery Point Objective): 5 minutes
+
+Steps for Regional Failover:
+```
+1. Detect outage (automated health checks)
+2. Failover to standby region (Route53 DNS update, 5 seconds)
+3. Restore from hourly backup (5 minutes)
+4. Validate services (2 minutes)
+5. Notify stakeholders (1 minute)
+Total: ~13 minutes
+```
+
+---
+
+6. PERFORMANCE TUNING
+
+6.1 JVM Tuning
+
+```bash
+export JAVA_OPTS="-Xms8g -Xmx16g \
+  -XX:+UseG1GC \
+  -XX:MaxGCPauseMillis=200 \
+  -XX:+ParallelRefProcEnabled \
+  -XX:+UnlockExperimentalVMOptions \
+  -XX:G1NewCollectionPercentage=30 \
+  -XX:G1MaxNewGenPercent=40"
+```
+
+6.2 Database Query Optimization
+
+Analyze slow queries:
+```sql
+-- Enable slow query logging
+ALTER SYSTEM SET log_min_duration_statement = 1000; -- 1 second
+SELECT pg_reload_conf();
+
+-- View slow queries
+SELECT query, calls, mean_time, max_time 
+FROM pg_stat_statements 
+ORDER BY mean_time DESC LIMIT 10;
+
+-- Create missing indexes
+CREATE INDEX idx_counterparty_country 
+ON counterparty_scores(country) 
+WHERE status = 'ACTIVE';
+```
+
+---
+
+7. TROUBLESHOOTING
+
+7.1 Common Issues
+
+Issue: High API Latency (>500ms)
+```
+1. Check database connection pool: 
+   SELECT count(*) FROM pg_stat_activity;
+2. Verify CPU/Memory: top, free -h
+3. Check Redis memory: redis-cli info memory
+4. Review slow query logs in Elasticsearch
+5. Increase pod replicas if CPU >80%
+```
+
+Issue: Memory Leak
+```
+1. Check heap usage: jps -l, jstat -gc <pid>
+2. Collect heap dump: jmap -dump:live,format=b,file=heap.bin <pid>
+3. Analyze with Eclipse MAT or JProfiler
+4. Rolling restart pods to mitigate
+```
+
+---
+
+Document Control:
+Version: 3.2.1
+Last Updated: June 2024
+Next Review: September 2024
+Maintained By: DevOps & Infrastructure Team
+Classification: INTERNAL

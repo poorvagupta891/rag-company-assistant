@@ -1,0 +1,284 @@
+RANDM CORPORATION - EMPLOYEE HANDBOOK
+======================================
+Effective Date: January 1, 2024
+Last Updated: June 2024
+
+Table of Contents
+1. Company Overview
+2. Employment Policies
+3. Code of Conduct
+4. Benefits & Compensation
+5. Remote Work Guidelines
+6. Health & Safety
+7. Data Security & Confidentiality
+8. Performance Management
+
+---
+
+1. COMPANY OVERVIEW
+
+RANDM Corporation is a leading provider of enterprise software solutions for financial services, founded in 2015. We have 450+ employees across 5 global offices in San Francisco, New York, London, Singapore, and Toronto.
+
+Company Mission: "Empowering financial institutions with intelligent, secure, and scalable software solutions."
+
+Core Values:
+- Innovation: We push boundaries and embrace emerging technologies
+- Integrity: We conduct business with honesty and transparency
+- Inclusivity: We celebrate diversity and foster belonging
+- Impact: We measure success by customer outcomes
+
+---
+
+2. EMPLOYMENT POLICIES
+
+2.1 Equal Opportunity Employment
+RANDM Corporation is an Equal Opportunity Employer. We do not discriminate based on race, color, religion, gender, sexual orientation, national origin, age, disability, or any other protected characteristic.
+
+2.2 At-Will Employment
+Employment is at-will, meaning either the employee or company may terminate employment at any time, with or without cause, unless otherwise specified in an employment contract.
+
+2.3 Work Authorization
+All employees must complete Form I-9 verification within three business days of hire. Non-U.S. citizens must have valid work authorization (visa sponsorship available for specialized roles).
+
+2.4 Background Checks
+RANDM Corporation conducts background checks for all positions involving access to financial data or client systems. Checks include criminal history, employment verification, and reference checks.
+
+2.5 Drug-Free Workplace
+RANDM maintains a drug-free workplace. Employees in safety-sensitive positions may be subject to drug testing. Violation of this policy may result in immediate termination.
+
+---
+
+3. CODE OF CONDUCT
+
+3.1 Professional Behavior
+All employees are expected to:
+- Treat colleagues with respect and professionalism
+- Maintain a harassment-free environment
+- Avoid conflicts of interest
+- Represent the company positively
+
+3.2 Anti-Harassment Policy
+RANDM has zero tolerance for harassment or discrimination. All employees are responsible for reporting incidents to HR within 48 hours. Retaliation against reporters is strictly prohibited and grounds for termination.
+
+3.3 Conflict of Interest
+Employees must disclose any potential conflicts of interest to their manager and HR. This includes:
+- Financial interests in clients or competitors
+- Relationships with clients or vendors
+- Ownership of complementary businesses
+- Board positions or advisory roles
+
+3.4 Social Media Guidelines
+Employees may not:
+- Disclose confidential company information on social media
+- Make disparaging comments about RANDM, customers, or employees
+- Impersonate the company without authorization
+- Post during work hours without permission
+
+Non-compliance may result in disciplinary action up to termination.
+
+3.5 Gifts & Entertainment
+Employees may not accept gifts valued over $50 from clients, vendors, or business partners. All gifts over $25 must be reported to Compliance. Entertainment expenses must be pre-approved by management and documented.
+
+---
+
+4. BENEFITS & COMPENSATION
+
+4.1 Compensation Structure
+- Base Salary: Determined by role, experience, and market benchmarks
+- Annual Bonus: 10-25% (performance-dependent, reviewed annually)
+- Stock Options: Available for full-time employees (4-year vest, 1-year cliff)
+
+4.2 Health Insurance
+RANDM provides comprehensive health insurance with three tiers:
+- Bronze: 85% employer, 15% employee premium
+- Silver: 80% employer, 20% employee premium
+- Gold: 75% employer, 25% employee premium
+
+Plans cover medical, dental, and vision. Dependents eligible at additional cost.
+Enrollment period: Within 30 days of hire, open enrollment January 1-31 annually.
+
+4.3 Retirement Plans
+- 401(k): Company matches up to 4% of salary (immediate eligibility)
+- Roth 401(k): Available (no company match)
+- Employee Stock Purchase Plan (ESPP): 10% discount, available after 90 days
+
+4.4 Time Off Policies
+- Unlimited PTO (minimum 15 days/year encouraged)
+- 10 company holidays
+- 3 paid sick days/year
+- 6 weeks paid parental leave (all genders)
+- 2 weeks paid sabbatical after 5 years service
+
+4.5 Professional Development
+- $2,000/year education budget per employee
+- On-site training programs (monthly)
+- Conference attendance (1-2 per year)
+- Certification reimbursement
+- Internal mentorship program
+
+4.6 Wellness Programs
+- Gym membership subsidy ($50/month)
+- Mental health counseling (EAP, 6 free sessions)
+- Meditation & yoga classes (on-site)
+- Wellness challenges (quarterly)
+- Free annual health screenings
+
+---
+
+5. REMOTE WORK GUIDELINES
+
+5.1 Remote Work Eligibility
+All full-time employees are eligible for remote work arrangements after 90-day probation period. Remote work requires:
+- Manager approval
+- Signed Remote Work Agreement
+- Proof of adequate home office setup
+- Internet speed test (minimum 25 Mbps download)
+
+5.2 Work Hours
+- Core hours: 10 AM - 3 PM PT (attendance required for meetings)
+- Flexible schedule outside core hours
+- Asynchronous communication encouraged
+- Time zone considerations respected
+
+5.3 Equipment & Setup
+- Company provides: Laptop, monitor, keyboard, mouse, desk/chair
+- VPN access required for all systems
+- Two-factor authentication mandatory
+- Home network must be secured (WPA2+ encryption)
+
+5.4 Expenses
+- Monthly home office allowance: $100
+- Annual tech budget: $500
+- Internet reimbursement: Up to $60/month (if primary work location)
+
+5.5 Communication Standards
+- Slack for synchronous chat
+- Zoom for meetings (camera on for 1:1s)
+- Email for formal communication
+- Asana for project tracking
+- Daily standup posts in team channels
+
+---
+
+6. HEALTH & SAFETY
+
+6.1 Workplace Safety
+RANDM maintains a safe workplace. Employees must:
+- Report hazards immediately to facilities
+- Follow emergency evacuation procedures
+- Maintain clean workspaces
+- Use ergonomic equipment properly
+
+6.2 Office Ergonomics
+Employees working in-office must maintain proper ergonomics. Free ergonomic assessments available. Standing desks and ergonomic chairs provided on request.
+
+6.3 Mental Health Support
+RANDM prioritizes mental wellness:
+- Employee Assistance Program (EAP): 24/7 counseling hotline
+- Mental health days encouraged (no note required)
+- Flexible scheduling for medical appointments
+- Crisis support available
+
+6.4 COVID-19 & Illness Policy
+- Employees must stay home if ill (no exceptions)
+- 5 days paid sick leave minimum for COVID-19 or similar respiratory illness
+- Return-to-work guidelines follow CDC recommendations
+- Vaccination encouraged (status confidential)
+
+---
+
+7. DATA SECURITY & CONFIDENTIALITY
+
+7.1 Confidential Information
+All employees must protect confidential company information including:
+- Product roadmaps and unreleased features
+- Client lists and contracts
+- Financial data and performance metrics
+- Source code and proprietary algorithms
+- Customer data and trade secrets
+
+Unauthorized disclosure may result in criminal prosecution and civil liability.
+
+7.2 Data Classification
+- PUBLIC: Marketing materials, public APIs, general announcements
+- INTERNAL: Company policies, internal communications, non-confidential data
+- CONFIDENTIAL: Client data, financial records, strategic plans
+- RESTRICTED: Passwords, encryption keys, PII
+
+7.3 Access Control
+- Principle of least privilege: Access only to data needed for job function
+- Password requirements: 12+ characters, mix of upper/lower/numbers/symbols
+- Multi-factor authentication: Required for all systems
+- Annual access reviews: Manager reviews reports of access quarterly
+
+7.4 Device Security
+- Full disk encryption required on all devices
+- Automatic lock after 5 minutes inactivity
+- No unauthorized software installation
+- Regular security patch updates mandatory
+- Lost/stolen devices reported immediately to IT
+
+7.5 Data Breach Protocol
+In case of suspected data breach:
+1. Stop work immediately
+2. Isolate affected systems
+3. Notify IT Security and Legal
+4. Do not discuss externally
+5. Cooperate with investigation
+
+Breach responsibility may result in termination and legal action.
+
+---
+
+8. PERFORMANCE MANAGEMENT
+
+8.1 Performance Reviews
+- Formal reviews: Semi-annual (January, July)
+- 360-degree feedback: Annual
+- Goals set using OKR framework
+- Calibration sessions ensure fairness
+
+8.2 Performance Ratings
+- Exceeds Expectations (5): Exceptional contribution, promotion-ready
+- Meets Expectations (3): Consistent performance, fully meets role requirements
+- Needs Improvement (2): Performance below expectations, improvement plan required
+- Unsatisfactory (1): Does not meet minimum standards
+
+8.3 Improvement Plans
+Performance improvement plans (PIPs) follow this structure:
+- Duration: 30-90 days (depends on severity)
+- Clear objectives and success metrics
+- Weekly check-ins with manager
+- HR involvement and support
+- Failure to improve may result in termination
+
+8.4 Promotion Criteria
+Promotion eligibility requires:
+- Consistent performance ratings of 4+ for 12+ months
+- Demonstrated competency at next level
+- Leadership quality or technical depth
+- Manager and skip-level approval
+
+8.5 Compensation Reviews
+- Annual salary reviews: January (tied to company performance)
+- Performance bonuses: 10-25% based on individual and company results
+- Equity refreshes: Annually for high performers
+- Market benchmarking: Conducted biannually
+
+---
+
+ACKNOWLEDGMENT
+
+I have read and understand the RANDM Corporation Employee Handbook. I acknowledge that this handbook is a guide and does not constitute a contract of employment. RANDM reserves the right to modify these policies at any time.
+
+Employee Signature: __________________ Date: __________
+Manager Name: __________________ Signature: __________
+
+---
+
+Document Control:
+Version: 2.4
+Last Reviewed: June 2024
+Next Review: January 2025
+Maintained By: Human Resources Department
+Classification: INTERNAL

@@ -1,0 +1,561 @@
+RANDM CORPORATION - TROUBLESHOOTING GUIDE & FAQ
+==============================================
+Product: FintechAI Pro v3.2
+Document Type: Support & Troubleshooting
+Date: June 2024
+Version: 3.2.1
+
+---
+
+1. FREQUENTLY ASKED QUESTIONS
+
+1.1 General Product Questions
+
+Q: What is FintechAI Pro?
+A: FintechAI Pro is RANDM Corporation's comprehensive suite for financial risk assessment, combining credit risk scoring, market risk analytics, and compliance monitoring in a single platform.
+
+Q: What are the main components?
+A: The system consists of four main modules:
+   1. Credit Risk Assessment Engine (counterparty scoring)
+   2. Market Risk Analytics (portfolio analysis, VaR, Greeks)
+   3. Compliance & Regulatory Module (Basel III, Dodd-Frank, MiFID II)
+   4. Data Integration & Analytics (dashboards, reporting)
+
+Q: What is the licensing model?
+A: We offer tiered licensing:
+   - Basic: $50K/year (up to 5 concurrent users)
+   - Enterprise: $200K/year (unlimited users)
+   - Custom: Volume-based pricing available
+
+Q: Can it integrate with our existing systems?
+A: Yes. We provide pre-built connectors for:
+   - Core Banking Systems (FIS, Temenos, Fiserv)
+   - Market Data (Bloomberg, Reuters, ECB)
+   - Data Warehouses (Snowflake, AWS Redshift)
+   - Custom integration via REST APIs
+
+Q: Is FintechAI Pro cloud-native?
+A: Yes. We support deployment on:
+   - On-premise (Kubernetes or Docker)
+   - AWS (EC2, ECS, EKS)
+   - Azure (AKS, managed services)
+   - Hybrid deployments with data federation
+
+Q: What is the typical ROI?
+A: Customers report:
+   - 35% reduction in credit losses
+   - 60% faster loan approval cycles
+   - 40% reduction in compliance violations
+   - 6-12 month payback period
+
+---
+
+1.2 Installation & Setup Questions
+
+Q: What are the minimum hardware requirements?
+A: For a proof-of-concept:
+   - CPU: 4-core @ 2.5GHz
+   - RAM: 16GB
+   - Storage: 50GB SSD
+   - Network: 100 Mbps Internet connection
+
+For production deployment:
+   - CPU: 8-16 core @ 3.5GHz
+   - RAM: 32-64GB
+   - Storage: 500GB-2TB NVMe
+   - Network: 1Gbps with redundancy
+
+Q: How long does implementation typically take?
+A: Timeline varies by scope:
+   - PoC: 4-6 weeks
+   - Initial Production: 12-16 weeks
+   - Full Suite with Custom Integration: 20-24 weeks
+   
+Key phases:
+   1. Infrastructure setup (2 weeks)
+   2. Data integration (4 weeks)
+   3. Model calibration (3 weeks)
+   4. Testing & UAT (3 weeks)
+   5. Go-live & training (2 weeks)
+
+Q: What pre-implementation work is required?
+A: You should prepare:
+   1. Historical data (3+ years recommended)
+   2. System architecture diagrams
+   3. Data governance policies
+   4. User access requirements
+   5. Compliance framework documentation
+   6. Network & security architecture
+
+Q: Can we deploy on-premise?
+A: Yes. We support:
+   - Docker Compose (small deployments)
+   - Kubernetes (enterprise)
+   - Bare metal (specialized requirements)
+
+We do NOT support Windows Server for production.
+
+Q: What database engines are supported?
+A: Primary support for:
+   - PostgreSQL 12+ (recommended)
+   - Oracle Database 19c+
+   
+MongoDB is used for optional document storage.
+MySQL is not supported.
+
+Q: How is data secured during transit?
+A: All data in transit uses:
+   - TLS 1.2+ encryption
+   - HTTPS/HSTS protocols
+   - Mutual TLS (mTLS) for service-to-service communication
+   - Certificate pinning for API endpoints
+
+Q: What about data at rest?
+A: Data at rest can be encrypted with:
+   - AES-256 encryption
+   - Database-level encryption (TDE)
+   - Optional key rotation (90-day default)
+   - Hardware security modules (HSM) supported
+
+---
+
+1.3 Integration Questions
+
+Q: Can FintechAI Pro connect to our core banking system?
+A: Yes, we have pre-built adapters for:
+   - Temenos T24/Transact
+   - FIS Profile/Wealth
+   - Fiserv DNA
+   - Custom SOAP/REST APIs
+
+Integration typically takes 2-4 weeks.
+
+Q: What data formats do you support?
+A: Ingestion formats:
+   - CSV, JSON, XML
+   - SWIFT MT940/MT950 (banking)
+   - FIX protocol (trading)
+   - XBRL (regulatory)
+   - Parquet (big data)
+
+Output formats:
+   - JSON, CSV, Excel
+   - PDF reports
+   - Avro (streaming)
+   - Kafka topics
+
+Q: Can we integrate real-time market data?
+A: Yes, we support:
+   - Bloomberg B-PIPE
+   - Reuters RTDS
+   - ECB Data Portal
+   - Yahoo Finance API (development only)
+   - Custom WebSocket feeds
+
+Real-time updates available within 5-30 minutes of market close.
+
+Q: How does FintechAI Pro handle data quality?
+A: We provide:
+   1. Data validation rules (schema, range, format)
+   2. Duplicate detection & deduplication
+   3. Outlier identification & flagging
+   4. Missing data handling (interpolation, imputation)
+   5. Data lineage tracking
+   6. Quality scorecards & dashboards
+
+Records failing validation are quarantined and reported to data stewards.
+
+Q: Is there a sandbox environment for testing?
+A: Yes, we provide:
+   - Sandbox API (sandbox-api.randm.com)
+   - Sample data sets
+   - Simulated market conditions
+   - No rate limiting
+   - Test API keys available upon request
+
+Use sandbox for development before production integration.
+
+---
+
+1.4 API & Integration Questions
+
+Q: What is the rate limit for API calls?
+A: Rate limits by endpoint:
+   - Credit Score: 100 req/min, 10K/day
+   - Market Risk: 50 req/min, 1K/day
+   - Compliance: 60 req/min, 5K/day
+   - Batch Jobs: 10 req/min, 100/day
+
+Higher limits available on Enterprise+ plans.
+
+Q: How do I authenticate API requests?
+A: Use OAuth 2.0 with client credentials flow:
+   1. Request token from https://auth.randm.com/oauth/token
+   2. Include token in Authorization header: "Bearer <token>"
+   3. Token expires in 3600 seconds (request new one before expiry)
+
+Code example in Python available in API docs.
+
+Q: What is the typical API response time?
+A: Latency targets:
+   - Credit Score: <100ms (p95)
+   - Market Risk: <500ms (p95)
+   - Batch Processing: 1000 records in ~2 minutes
+   
+Actual performance depends on:
+   - Data complexity
+   - System load
+   - Network latency
+   - Database query optimization
+
+Q: Can I make batch requests?
+A: Yes, asynchronous batch processing:
+   - Submit CSV file with requests
+   - Receive job ID immediately
+   - Process asynchronously in background
+   - Results delivered via webhook
+   - Suitable for 1000+ records
+
+Q: How long are API results cached?
+A: Caching strategy:
+   - Credit scores: 24 hours (invalidates on counterparty data update)
+   - Market risk: 1 hour (depends on market data freshness)
+   - Compliance: 7 days (regulatory data updates weekly)
+
+Cache can be manually invalidated via API endpoint.
+
+Q: What webhook events are available?
+A: Supported events:
+   - batch.job.started
+   - batch.job.completed
+   - batch.job.failed
+   - credit_score.calculated
+   - compliance.alert
+   - system.maintenance
+
+All webhooks include HMAC-SHA256 signature for security.
+
+---
+
+2. TROUBLESHOOTING GUIDES
+
+2.1 Performance Issues
+
+Symptom: Slow Credit Score Calculation (>500ms)
+
+Diagnosis:
+1. Check system resources:
+   ```bash
+   top -b -n 1 | head -20
+   free -h
+   iostat -x 1 5
+   ```
+
+2. Verify database connection:
+   ```sql
+   SELECT count(*) FROM pg_stat_activity;
+   SELECT max(query_time) FROM slow_query_log;
+   ```
+
+3. Review application logs:
+   ```bash
+   grep "credit_score" /var/log/fintech-ai/app.log | tail -100
+   ```
+
+Resolution Steps:
+- Increase JVM heap size (-Xmx16g)
+- Add database indexes: CREATE INDEX idx_counterparty_history...
+- Enable query caching (Redis)
+- Scale to additional pods/servers
+- Optimize data loading (lazy loading)
+
+Expected After Fix: <100ms response time
+
+---
+
+2.2 Database Connection Issues
+
+Symptom: "Connection to database refused"
+
+Diagnosis:
+```bash
+# Test connectivity
+nc -zv db.internal.randm.com 5432
+
+# Check PostgreSQL status
+systemctl status postgresql
+
+# View connection logs
+tail -f /var/log/postgresql/postgresql.log
+```
+
+Common Causes:
+1. Firewall blocking port 5432
+   - Solution: Verify firewall rules, check security groups
+
+2. PostgreSQL service not running
+   - Solution: systemctl start postgresql
+
+3. Connection pool exhausted
+   - Solution: Check active connections, increase pool size
+
+4. Invalid credentials
+   - Solution: Verify username/password in config, reset password
+
+5. Network latency >100ms
+   - Solution: Use local database replica, optimize network path
+
+---
+
+2.3 Memory Leaks
+
+Symptom: Memory usage increases over time, server eventually crashes
+
+Diagnosis:
+```bash
+# Monitor memory growth
+jps -l
+jstat -gc -h10 <pid> 1000
+
+# Collect heap dump
+jmap -dump:live,format=b,file=heap.bin <pid>
+
+# Analyze dump with Eclipse MAT
+```
+
+Resolution Steps:
+1. Update to latest patch version
+2. Configure JVM GC parameters:
+   ```bash
+   -XX:+UseG1GC -XX:MaxGCPauseMillis=200
+   ```
+3. Implement code fix in next release
+4. Restart pod to temporarily mitigate
+5. Monitor memory after restart
+
+Expected Resolution Time: <1 day
+
+---
+
+2.4 API Authentication Failures
+
+Symptom: "401 Unauthorized" on API calls
+
+Diagnosis:
+1. Verify token format:
+   ```bash
+   curl -H "Authorization: Bearer <token>" https://api.randm.com/v3/health
+   ```
+
+2. Check token expiration:
+   ```python
+   import jwt
+   token = "eyJhbGciOi..."
+   jwt.decode(token, options={"verify_signature": False})
+   ```
+
+3. Verify client credentials:
+   ```bash
+   # Request new token
+   curl -X POST https://auth.randm.com/oauth/token \
+     -d "grant_type=client_credentials&client_id=YOUR_ID&client_secret=YOUR_SECRET"
+   ```
+
+Resolution Steps:
+- Request new token before expiration
+- Verify client_id and client_secret are correct
+- Check API key hasn't been revoked
+- Whitelist calling IP if IP filtering enabled
+- Contact support if token requests fail
+
+---
+
+2.5 Data Quality Issues
+
+Symptom: Credit scores seem incorrect or unreliable
+
+Diagnosis:
+1. Check data source freshness:
+   ```sql
+   SELECT max(data_date) FROM market_data;
+   SELECT COUNT(*) FROM data_quality_checks WHERE status='FAILED';
+   ```
+
+2. Review data completeness:
+   ```bash
+   # Export data quality report
+   curl https://api.randm.com/v3/data/quality-report
+   ```
+
+3. Verify model version:
+   ```bash
+   curl https://api.randm.com/v3/system/status | grep model_version
+   ```
+
+Resolution Steps:
+- Verify all required data feeds are active
+- Check data source permissions and connectivity
+- Update market baseline data (daily)
+- Reload historical data if data feeds were interrupted
+- Run model recalibration if data significantly changed
+
+Contact Data Quality team if issues persist.
+
+---
+
+2.6 Compliance Alert Failures
+
+Symptom: Compliance checks not running, alerts not firing
+
+Diagnosis:
+```bash
+# Check compliance engine status
+systemctl status fintech-compliance
+
+# View compliance job logs
+journalctl -u fintech-compliance -n 50
+
+# Verify regulatory data is loaded
+psql fintech_db -c "SELECT COUNT(*) FROM regulatory_rules;"
+```
+
+Resolution Steps:
+1. Restart compliance service:
+   ```bash
+   systemctl restart fintech-compliance
+   ```
+
+2. Verify regulatory data is current:
+   ```bash
+   ./load-regulatory-baseline.sh
+   ```
+
+3. Check webhook endpoint is accessible:
+   ```bash
+   curl -v https://your-webhook-endpoint.com/compliance
+   ```
+
+4. Review alert thresholds:
+   ```bash
+   curl https://api.randm.com/v3/compliance/alert-config
+   ```
+
+5. Check notification service:
+   ```bash
+   journalctl -u fintech-notifications -n 20
+   ```
+
+---
+
+3. ERROR CODES & SOLUTIONS
+
+Error Code: CREDIT_SCORE_UNAVAILABLE
+HTTP Status: 503 Service Unavailable
+Cause: Credit scoring engine unreachable
+Solution:
+1. Check service health: curl https://api.randm.com/v3/health
+2. Verify database connectivity
+3. Check service logs for errors
+4. Restart service if needed
+
+Error Code: RATE_LIMIT_EXCEEDED
+HTTP Status: 429 Too Many Requests
+Cause: Too many requests in short time
+Solution:
+1. Wait until Retry-After header time elapsed
+2. Implement exponential backoff in client
+3. Request higher rate limit from support
+4. Use batch API for large jobs
+
+Error Code: INVALID_DATA_FORMAT
+HTTP Status: 400 Bad Request
+Cause: Request body malformed or missing required fields
+Solution:
+1. Validate JSON schema
+2. Check required fields are present
+3. Verify data types match specification
+4. Use API documentation examples
+
+Error Code: UNAUTHORIZED_ACCESS
+HTTP Status: 403 Forbidden
+Cause: User lacks permission for resource
+Solution:
+1. Verify API key is correct
+2. Check user role has required permissions
+3. Contact admin to grant access
+4. Check account is not suspended
+
+---
+
+4. SUPPORT ESCALATION
+
+When to Contact Support:
+
+Level 1: Self-Service (Most Issues)
+- Check this FAQ and troubleshooting guide
+- Search knowledge base: https://kb.randm.com
+- Review API documentation
+- Check status page: https://status.randm.com
+
+Level 2: Email Support (24 hours response)
+- Email: support@randm.com
+- Subject format: [PRODUCT] [SEVERITY] Brief description
+- Include: logs, request ID, steps to reproduce
+
+Level 3: Phone Support (Critical Issues)
+- Call: +1-650-555-0100 (24/7 for Enterprise customers)
+- Reference: Support ticket number
+- Have: Relevant logs, system info, business impact
+
+Level 4: Escalation (P1 Issues)
+- Contact: dedicated.support@randm.com
+- Senior engineer assigned within 1 hour
+- Updates every 30 minutes
+- Target resolution: 4 hours
+
+Define Severity Levels:
+- P1 (Critical): System down, data loss, security breach
+- P2 (High): Core functionality impaired, workaround exists
+- P3 (Medium): Minor functionality issue, non-blocking
+- P4 (Low): Documentation, UI, cosmetic issues
+
+---
+
+5. BEST PRACTICES
+
+5.1 Operational Best Practices
+
+1. Monitor System Health Daily
+   - Review dashboard metrics
+   - Check alert thresholds
+   - Verify backup completion
+   - Review access logs
+
+2. Keep Data Current
+   - Update market data daily
+   - Reload regulatory baseline weekly
+   - Monitor data quality scores
+   - Document data issues
+
+3. Regular Testing
+   - Run monthly disaster recovery tests
+   - Test API endpoints weekly
+   - Validate backup restoration quarterly
+   - Perform load testing semi-annually
+
+4. Security Hardening
+   - Rotate API keys quarterly
+   - Update TLS certificates 30 days before expiry
+   - Review access controls semi-annually
+   - Patch security vulnerabilities immediately
+
+---
+
+Document Control:
+Version: 3.2.1
+Last Updated: June 2024
+Next Review: September 2024
+Maintained By: Customer Support & Technical Operations
+Classification: INTERNAL
+Support Email: support@randm.com
+Support Phone: +1-650-555-0100
